@@ -2525,6 +2525,33 @@ class PrettyPrinter(Printer):
         pform = prettyForm(*stringPict.next(l, op, r))
         return pform
 
+    def _print_VectorAdd(self,e):
+        return self._print_Add(e)
+
+    def _print_VectorMul(self, e):
+        return self._print_Mul(e)
+
+    def _print_BaseVector(self, e):
+        let, cord = e.args # letter = i,j,k cord = cordinate system name
+        cord_name = cord.args[0].name
+
+        if let == 0:
+            temp_sym = Symbol(cord_name + '_i')
+        elif let == 1:
+            temp_sym = Symbol(cord_name + '.j') # to do baby j
+        elif let == 2:
+            temp_sym = Symbol(cord_name + '_k')
+
+        let_pform = self._print(temp_sym)
+
+        cord_pform = self._print(cord)
+        hat = Symbol('^')
+        hat_pform = self._print(hat)
+
+        pform = prettyForm(*let_pform)
+        pform = prettyForm(*pform.above(hat_pform))
+
+        return pform
 
 def pretty(expr, **settings):
     """Returns a string containing the prettified form of expr.
